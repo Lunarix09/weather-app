@@ -75,32 +75,35 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
     const unitsImpContent = [tempRef_2, windRef_2, precipitationRef_2]; 
     const unitsMetContent = [tempRef_1, windRef_1, precipitationRef_1]; 
 
+    const handleUnitClik = (isUnit:string, criticBool:boolean):void=>{
+        if (localStorage.getItem(isUnit) === String(criticBool) ) return
+        
+        if (isUnit === "isCelsius") setIsCelsius(criticBool);
+        else if (isUnit === "isKmh") setIsKmh(criticBool);
+        else if (isUnit === "isMm") setIsMm(criticBool);
+        
+        localStorage.setItem(isUnit, (criticBool).toString());
+        
+        if (checkAllUnitsFalse() ){
+            switchRef.current?.classList.add("bg-neutral-700");
+            setIsImperial(true);
+        }else{
+            switchRef.current?.classList.remove("bg-neutral-700");
+            setIsImperial(false);
+        };
+    }
+
     useEffect(() => {
         toggleDropdown();
         ["isCelsius", "isKmh", "isMm"].forEach((unit, i)=>{
             const localUnit = localStorage.getItem(unit);
             localUnit === "false" && unitsImpContent[i].current?.click();
             localUnit === "true" && unitsMetContent[i].current?.click();
-        })
+        });
+        localStorage.getItem("isImperial") === "true" && switchRef.current?.click();
         // cette boucle permet de synchroniser l'état des unités avec le localStorage au chargement de la page, en cliquant sur les éléments correspondants dans le dropdown pour appliquer les styles et les checkmarks
         // elle ne sera exécutée qu'une seule fois au chargement de la page grâce au tableau de dépendances vide, et elle garantit que les préférences de l'utilisateur sont correctement affichées dans le dropdown dès le départ
     }, []);
-
-    // useEffect(() => {
-
-    //     if (isImperial) {
-    //         ["isCelsius", "isKmh", "isMm"].forEach((unit, i)=>{
-    //             const localUnit = localStorage.getItem(unit);
-    //             localUnit === "true" && unitsImpContent[i].current?.click();
-    //         })
-    //     } else {
-    //         ["isCelsius", "isKmh", "isMm"].forEach((unit, i)=>{
-    //             const localUnit = localStorage.getItem(unit);
-    //             localUnit === "false" && unitsMetContent[i].current?.click();
-    //         })
-    //     }                 
-    // }, [isImperial]);
-
     
   return (
     <div className="absolute top-0 left-[2.5vw] pt-2 h-11 w-[95vw] bgneutral-900 backdrop-blur-sm z-2000 flex flex-row justify-between items-center font-dm_sans ">
@@ -142,10 +145,10 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                 className="dropdown-content-child dropdown-content-child-1 text-neutral-0 text-[12px] mb-0.5 border border-transparent hover:border-neutral-200 rounded-md "
                 onClick={(e) => {
                     toggleDropdownContent(e);
-                    localStorage.setItem("isImperial", (!isImperial).toString());
+                    localStorage.setItem("isImperial", String(!isImperial));
                     setIsImperial(!isImperial);
-                    // la nouvelle valeur de isImperial sera affichée au prochain render, mais pas immédiatement après le setIsImperial
-                    (localStorage.getItem("isImperial") === "true")
+                    
+                    !isImperial
                         ? unitsImpContent.forEach((unit)=>{unit.current?.click()})
                         : unitsMetContent.forEach((unit)=>{unit.current?.click()});
                 }}
@@ -167,10 +170,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between mb-1 border border-transparent hover:border-neutral-200 rounded-md"
                     ref={tempRef_1}
                     onClick={()=>{
-                        if (localStorage.getItem("isCelsius") === "true" ) return
-                        setIsCelsius(!isCelsius);
-                        localStorage.setItem("isCelsius", (!isCelsius).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isCelsius", true)
                     }}
                 >
                     <div className="text-start cursor-pointer">
@@ -190,10 +190,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between border border-transparent hover:border-neutral-200 rounded-md  "
                     ref={tempRef_2}
                     onClick={()=>{
-                        if (localStorage.getItem("isCelsius") === "false" ) return
-                        setIsCelsius(!isCelsius);
-                        localStorage.setItem("isCelsius", (!isCelsius).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isCelsius", false)
                     }}
                 >
                     <div className=" text-start cursor-pointer">
@@ -225,10 +222,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between mb-1 border border-transparent hover:border-neutral-200 rounded-md"
                     ref={windRef_1}
                     onClick={()=>{
-                        if (localStorage.getItem("isKmh") === "true" ) return
-                        setIsKmh(!isKmh);
-                        localStorage.setItem("isKmh", (!isKmh).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isKmh", true)
                     }}
                 >
                     <div className="text-start cursor-pointer">
@@ -248,10 +242,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between border border-transparent hover:border-neutral-200 rounded-md  "
                     ref={windRef_2}
                     onClick={()=>{
-                        if (localStorage.getItem("isKmh") === "false" ) return
-                        setIsKmh(!isKmh);
-                        localStorage.setItem("isKmh", (!isKmh).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isKmh", false)
                     }}
                 >
                     <div className=" text-start cursor-pointer">
@@ -280,10 +271,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between mb-1 border border-transparent hover:border-neutral-200 rounded-md"
                     ref={precipitationRef_1} 
                     onClick={()=>{
-                        if (localStorage.getItem("isMm") === "true" ) return
-                        setIsMm(!isMm);
-                        localStorage.setItem("isMm", (!isMm).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isMm", true)
                     }}
                 >
                     <div className="text-start cursor-pointer">
@@ -303,10 +291,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     className=" dropdown-content-child flex flex-row justify-between border border-transparent hover:border-neutral-200 rounded-md  "
                     ref={precipitationRef_2}
                     onClick={()=>{
-                        if (localStorage.getItem("isMm") === "false" ) return
-                        setIsMm(!isMm);
-                        localStorage.setItem("isMm", (!isMm).toString());
-                        checkAllUnitsFalse() ? switchRef.current?.classList.add("bg-neutral-700") : switchRef.current?.classList.remove("bg-neutral-700");
+                        handleUnitClik("isMm", false)
                     }}
                 >
                     <div className=" text-start cursor-pointer">

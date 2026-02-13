@@ -144,7 +144,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                         weatherData?.current?.weather_code ?? 0
                       )}
                       alt="Current Weather Icon"
-                      width={100}
+                      width={90}
                       height={100}
                     />
                   
@@ -222,13 +222,13 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
           <div className="daily-forecast md:grid md:grid-cols-7 max-md:flex max-md:flex-row max-md:flex-wrap max-md:gap-2 max-md:justify-center md:gap-3 w-full h-full text-center">
             {!weatherData?.daily?.time?.length &&  (
               <>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
                 
               </> 
             )}
