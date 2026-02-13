@@ -97,7 +97,7 @@ const HomeClient = () => {
     });
     // then signifie une fois que la promesse est résolue, on peut accéder à la valeur de retour de la fonction asynchrone
     
-  }, [isSearching ,searchText, isCelsius, isKmh, isMm, lang])
+  }, [isSearching ,searchText, isCelsius, isKmh, isMm])
 
   return (
     <div className="flex flex-col w-screen h-screen max-md:px-3 md:px-15 pt-11 pb-4 justify-start items-center overflow-auto scroll-auto ">

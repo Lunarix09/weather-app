@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CheckWeatherCode from "../functions/CheckWeatherCode";
+import Select from "./Select";
 
 type BodyProps = {
   isCelsius: boolean;
@@ -39,8 +40,6 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
   const [selectday, setSelectday] = useState<string>("Monday");
   const [isloading, setIsLoading] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-
-  const [open, setOpen] = useState<boolean>(false);
   const days = [
     "Monday",
     "Tuesday",
@@ -50,16 +49,6 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
     "Saturday",
     "Sunday",
   ];
-  const toggleSelectDropdown = ():void => {
-    document.addEventListener("click", (e) => {
-      const isDropdownTrigger = (e.target as HTMLElement).closest(
-        ".select-dropdown",
-      );
-      if (!isDropdownTrigger) {
-        setOpen(false);
-      }
-    });
-  };
 
   useEffect(() => {
     if (weatherData?.hourly?.time?.length > 0) {
@@ -80,7 +69,6 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
   }, []);
 
   useEffect(() => {
-    toggleSelectDropdown();
     setIsMobile(window.innerWidth <= 768);
   }, []);
 
@@ -274,39 +262,15 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
             Hourly forecast
           </div>
 
-          <div className="select-dropdown relative w-25 ">
-            {/* Trigger */}
-            <button
-              onClick={() => setOpen(!open)}
-              className="w-full h-fit flex flex-row justify-between items-center text-start text-[12px] text-neutral-200 font-medium bg-neutral-600 border border-neutral-700 focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1 cursor-pointer transition duration-300 ease"
-            >
-              <div>{isloading ? "__" : selectday}</div>
-              <Image
-                src="/icon-dropdown.svg"
-                alt="Units icon"
-                width={12}
-                height={12}
-              />
-            </button>
-
-            {/* Options */}
-            {open && (
-              <ul className="absolute sinp z-50 mt-1 w-full bg-neutral-600 overflow-hidden shadow-lg">
-                {days.map((day) => (
-                  <li
-                    key={day}
-                    onClick={() => {
-                      setSelectday(day);
-                      setOpen(false);
-                    }}
-                    className="px-3 py-1.5 text-[12px] text-neutral-200 cursor-pointer border border-neutral-700 hover:border-neutral-200 transition duration-300 esae "
-                  >
-                    {day}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <Select 
+            values={days}
+            value={selectday}
+            setValue={setSelectday}
+            dropdownClassName={"w-25"}
+            triggerClassName={" w-full h-fit flex flex-row justify-between items-center text-start text-[12px] text-neutral-200 font-medium bg-neutral-600 border border-neutral-700 focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1 cursor-pointer transition duration-300 ease"}
+            ulClassName={" w-full bg-neutral-600  shadow-lg"}
+            liClassName={" border px-3 py-1.5 text-[12px] text-neutral-200 border-neutral-700 hover:border-neutral-200 transition duration-300 esae"}
+          />
         </div>
 
         <div className="flex flex-col w-full scroll mt-3">

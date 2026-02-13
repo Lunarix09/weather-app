@@ -99,20 +99,18 @@ async function GetWeather(
 
      
      const fectchWeather = async ()=>{
-          const imperialParams = {
-               ...( !isKmh && {wind_speed_unit:"mph"} ), 
-               ...( !isCelsius && {temperature_unit:"fahrenheit"} ), 
-               ...( !isMm && {precipitation_unit:"inch"} ),
-          }; 
-          const params = {
+          const params: Record<string, any> = {
                latitude: cityInfo?.latitude || 0,
                longitude: cityInfo?.longitude || 0,
                daily: ["temperature_2m_max", "temperature_2m_min", "weather_code"],
                hourly: ["temperature_2m", "weather_code"],
                current: ["temperature_2m", "apparent_temperature", "wind_speed_10m", "is_day", "weather_code", "precipitation", "relative_humidity_2m"],
                timezone: cityInfo?.timezone || "Australia/Sydney",
-               imperialParams
+               
           };
+          if (!isKmh) params.wind_speed_unit="mph";
+          if (!isCelsius) params.temperature_unit="fahrenheit";
+          if (!isMm) params.precipitation_unit="inch";
           
           const oMurl = process.env.NEXT_PUBLIC_OMAPI_URL!;
           const responses = await fetchWeatherApi(oMurl, params);
