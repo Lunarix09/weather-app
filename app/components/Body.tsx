@@ -85,7 +85,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
   }, []);
 
   return (
-    <div className="md:grid md:grid-cols-3 max-md:grid-cols-1 gap-4 max-md:w-[85vw] md:w-[70vw] md:flex-1 max-md:mt-0.5">
+    <div className="md:grid md:grid-cols-3 max-md:grid-cols-1 gap-4 w-[85vw] min-[1000px]:w-[70vw] md:flex-1 max-md:mt-0.5">
       <div className="body-left col-start-1 md:col-span-2 flex flex-col items-start justify-start rounded-lg ">
         
         <div
@@ -149,7 +149,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                     />
                   
                   <div>
-                    {weatherData?.current?.temperature_2m?.toFixed(1)}°
+                    {weatherData?.current?.temperature_2m?.toFixed(0)}°
                   </div>
                   </>
                   
@@ -171,7 +171,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : !weatherData?.current?.apparent_temperature 
                     ? "__" 
-                    : weatherData?.current?.apparent_temperature?.toFixed(1)}{weatherData?.current?.temperature_2m !== null && !isloading && "°"}
+                    : weatherData?.current?.apparent_temperature?.toFixed(0)}{weatherData?.current?.temperature_2m !== null && !isloading && "°"}
               </div>
             </div>
 
@@ -184,7 +184,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.relative_humidity_2m === null || weatherData?.current?.relative_humidity_2m < 0
                     ? "__" 
-                    : weatherData?.current?.relative_humidity_2m?.toFixed(1)}{weatherData?.current?.relative_humidity_2m !== null && !isloading && "%"}
+                    : weatherData?.current?.relative_humidity_2m?.toFixed(0)}{weatherData?.current?.relative_humidity_2m !== null && !isloading && "%"}
               </div>
             </div>
 
@@ -197,7 +197,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.wind_speed_10m === null || weatherData?.current?.wind_speed_10m < 0
                     ? "__" 
-                    : weatherData?.current?.wind_speed_10m?.toFixed(1)}{weatherData.current?.wind_speed_10m !== null && !isloading ? !isKmh ? " mph" : " km/h" : ""}
+                    : weatherData?.current?.wind_speed_10m?.toFixed(0)}{weatherData.current?.wind_speed_10m !== null && !isloading ? !isKmh ? " mph" : " km/h" : ""}
               </div>
             </div>
 
@@ -210,7 +210,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.precipitation === null || weatherData?.current?.precipitation < 0
                     ? "__" 
-                    : weatherData?.current?.precipitation?.toFixed(1)}{weatherData?.current?.precipitation !== null && !isloading ? !isMm ? " inch" : " mm" : ""}
+                    : weatherData?.current?.precipitation?.toFixed(0)}{weatherData?.current?.precipitation !== null && !isloading ? !isMm ? " inch" : " mm" : ""}
               </div>
             </div>
           </div>
@@ -222,13 +222,13 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
           <div className="daily-forecast md:grid md:grid-cols-7 max-md:flex max-md:flex-row max-md:flex-wrap max-md:gap-2 max-md:justify-center md:gap-3 w-full h-full text-center">
             {!weatherData?.daily?.time?.length &&  (
               <>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
-                <div className="bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-19 md:w-18 max-md:h-24 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
+                <div className="bg-neutral-800 rounded-lg border border-neutral-600 w-18 max-md:h-24 md:max-[1100px]:w-15 h-full"></div>
                 
               </> 
             )}
@@ -237,9 +237,9 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
               ?.map((today: string, i) => (
               <div
                 key={`${today}-${i}`}
-                className=" p-1.5 bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-full h-full flex flex-col justify-between items-center"
+                className=" p-1.5 bg-neutral-800 rounded-lg border border-neutral-600 max-md:w-20.5 md:w-[95%] h-full flex flex-col justify-between items-center"
               >
-                  <div className="flex flex-col items-center justify-center h-full">
+                  <div className="flex flex-col items-center justify-center h-full w-full">
                     <label className="text-center text-[14px] text-neutral-0 ">
                       {today.split(" ")[0]}
                     </label>
@@ -253,12 +253,12 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                       height={45}
                     />
 
-                    <div className="flex flex-row w-full items-center justify-center gap-2.5">
+                    <div className="flex flex-row w-full items-center justify-between">
                       <div className="text-[13px] text-neutral-0 font-normal">
-                        {weatherData?.daily?.temperature_2m_max[i]?.toFixed(1)}°
+                        {weatherData?.daily?.temperature_2m_max[i]?.toFixed(0)}°
                       </div>
                       <div className="text-[12px] text-neutral-200 font-normal">
-                        {weatherData?.daily?.temperature_2m_min[i]?.toFixed(1)}°
+                        {weatherData?.daily?.temperature_2m_min[i]?.toFixed(0)}°
                       </div>
                     </div>
                   </div>
@@ -346,7 +346,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   <div className="text-[12px] text-neutral-200 ">
                           {weatherData?.hourly?.temperature_2m[
                             weatherData.hourly.time.indexOf(td)
-                          ]?.toFixed(1) ?? 0}°
+                          ]?.toFixed(0) ?? 0}°
                   </div>
                 </div>
               )
