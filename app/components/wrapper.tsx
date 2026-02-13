@@ -111,7 +111,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
         onClick={()=>{window.location.reload()}}
       >
         <Image
-          src="/logo.svg"
+          src="/assets/logo.svg"
           alt="Weather icon"
           width={130} // is in pixels
           height={100}
@@ -122,7 +122,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
         <button className="dropdown-trigger flex flex-row w-24 h-6.5 gap-2 items-center justify-between text-center text-[12px] text-neutral-0 font-light bg-neutral-800 border border-transparent focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1">
             <div>
                 <Image
-                src="/icon-units.svg"
+                src="/assets/icon-units.svg"
                 alt="Units icon"
                 width={12}
                 height={12}
@@ -130,7 +130,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
             </div>
             <div>Units</div>
             <Image
-                src="/icon-dropdown.svg"
+                src="/assets/icon-dropdown.svg"
                 alt="Units icon"
                 width={12}
                 height={12}
@@ -178,7 +178,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     </div>
 
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}
@@ -197,7 +197,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                         Fahrenheit (°F)
                     </div>
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}
@@ -230,7 +230,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     </div>
 
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}
@@ -249,7 +249,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                         mph
                     </div>
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}
@@ -279,7 +279,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                     </div>
 
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}
@@ -298,7 +298,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
                         Inches (in)
                     </div>
                     <Image
-                        src="/icon-checkmark.svg"
+                        src="/assets/icon-checkmark.svg"
                         alt="Units icon"
                         width={12}
                         height={12}

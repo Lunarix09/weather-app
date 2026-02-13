@@ -55,7 +55,7 @@ const Header: React.FC<SearchProps> = ({setSearchText, setIsSearching, isSearchi
         >
           <label className="flex items-center gap-4 max-md:w-full md:w-[65%] px-4 py-2 h-9 rounded-lg bg-neutral-800">
             <Image
-              src="/icon-search.svg"
+              src="/assets/icon-search.svg"
               alt="Search Icon"
               width={15}
               height={15}
@@ -82,7 +82,7 @@ const Header: React.FC<SearchProps> = ({setSearchText, setIsSearching, isSearchi
           {isSearching && (
             <div className="absolute z-50 sinp top-full md:right-[25%] mt-2 p-1.5 h-7 max-md:w-full md:w-[65%] flex items-center gap-1 bg-neutral-800 rounded-lg">
               <Image
-                src="/icon-loading.svg"
+                src="/assets/icon-loading.svg"
                 alt="Loading"
                 width={15}
                 height={15}

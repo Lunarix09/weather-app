@@ -89,7 +89,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
           {isloading ? (
             <div className="flex w-full justify-center items-center text-[8px] text-neutral-200 font-dm_sans font-medium relative ">
               <Image
-                src="/icon-loading.svg"
+                src="/assets/icon-loading.svg"
                 alt="Loading"
                 width={50}
                 height={50}

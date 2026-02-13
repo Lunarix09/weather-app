@@ -30,7 +30,7 @@ const Select:React.FC<SelectProps> = ({values, value, setValue, dropdownClassNam
                >
                    <div>{isloading? "_" : value}</div>
                    <Image
-                     src="/icon-dropdown.svg"
+                     src="/assets/icon-dropdown.svg"
                      alt="Units icon"
                      width={12}
                      height={12}

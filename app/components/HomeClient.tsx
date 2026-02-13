@@ -115,7 +115,7 @@ const HomeClient = () => {
         errorOccurs 
           ? <div className="flex flex-col justify-center items-center mt-5">
               <Image
-                src="/icon-error.svg"
+                src="/assets/icon-error.svg"
                 alt="Error Icon"
                 width={60}
                 height={60}
@@ -137,7 +137,7 @@ const HomeClient = () => {
                 }}
               >
                 <Image
-                  src="/icon-retry.svg"
+                  src="/assets/icon-retry.svg"
                   alt="Refresh Icon"
                   width={15}
                   height={15}
