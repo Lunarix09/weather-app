@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+
+:root {
+  --neutral-900: hsl(243, 96%, 9%);
+  --neutral-800: hsl(243, 27%, 20%);
+  --neutral-700: hsl(243, 23%, 24%);
+  --neutral-600: hsl(243, 23%, 30%);
+  --neutral-300: hsl(240, 6%, 70%);
+  --neutral-200: hsl(250, 6%, 84%);
+  --neutral-0: hsl(0, 0%, 100%);
+  --neutral-blue-500: hsl(233, 67%, 56%);
+  --neutral-blue-700: hsl(248, 70%, 36%);
+  --neutral-orange-500: hsl(28, 100%, 52%);
+  --font-bricolage_grotesque: "Bricolage Grotesque", sans-serif;
+  --font-dm_sans: "DM Sans", sans-serif;
+}
+
+@theme inline {
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-orange-500: var(--neutral-orange-500);
+  --color-neutral-blue-500: var(--neutral-blue-500);
+  --color-neutral-blue-700: var(--neutral-blue-700);
+  --color-neutral-0: var(--neutral-0);
+  --font-bricolage_grotesque: var(--font-bricolage_grotesque);
+  --font-dm_sans: var(--font-dm_sans);
+}
+
+body {
+  background: var(--color-neutral-900)  ;
+  color: var(--color-neutral-0);
+  font-family: var(--font-bricolage-grotesque), var(--font-dm-sans), sans-serif;
+  /* on peut récupérer les variables CSS définies ci-dessus et les utiliser dans d'autres éléments */
+}
+
+
+
+/* ================= Dropdown ================= */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* trigger */
+.dropdown-trigger {
+  cursor: pointer;
+}
+
+/* contenu */
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  position: absolute;
+  z-index: 1000;
+  border-radius: 8px;
+  opacity: 0;
+  padding: 3.5px; 
+  transform: scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* ouverture */
+.dropdown.is-open .dropdown-content {
+  display: flex;
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* focus clavier */
+.dropdown:focus-within .dropdown-content {
+  /* display: flex; */
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* bottom (par défaut) */
+.dropdown-bottom .dropdown-content {
+  top: 100%;
+  left: -50%;
+  margin-top: 8px;
+  transform-origin: top;
+  animation: slideDown 0.4s ease  forwards;
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* top */
+.dropdown-top .dropdown-content {
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 8px;
+  transform-origin: bottom;
+  animation: slideTop 0.4s ease  forwards;
+}
+@keyframes slideTop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* start (gauche) */
+.dropdown-start .dropdown-content {
+  left: 0;
+}
+
+/* center */
+.dropdown-center .dropdown-content {
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  animation: slideCenter 0.4s ease  forwards;
+}
+@keyframes slideCenter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.dropdown:focus-within.dropdown-center .dropdown-content,
+.dropdown.is-open.dropdown-center .dropdown-content {
+  transform: translateX(-50%) scale(1);
+}
+
+/* end (droite) */
+.dropdown-end .dropdown-content {
+  right: 0;
+}
+
+/* left */
+.dropdown-left .dropdown-content {
+  left: -50%;
+  top: 100%;
+  margin-right: 8px;
+  transform-origin: right;
+  animation: slideLeft 0.4s ease  forwards;
+}
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* right */
+.dropdown-right .dropdown-content {
+  left: 50%;
+  top: 100%;
+  margin-left: 8px;
+  transform-origin: left;
+  animation: slideRight 0.4s ease  forwards;
+}
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.dropdown-content .dropdown-content-child {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+  height: 32px;
+  width: 100%;
+  padding: 5px;
+  text-decoration: none;
+}
+
+/* =========== Button ============ */
+.button {
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.button:active{
+  animation: clickEffect 0.3s ease ;
+}
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03)  ;
+  }
+  100% {
+    transform: scale(1) ;
+  }
+}
+
+/* ====  search === */
+.sinp{
+  transform-origin: top;
+  animation: slideDown 0.45s ease  forwards;
+}
+
+/* ============ Body ============ */
+.scroll {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -webkit-scrollbar-width: none; /* Safari and Chrome */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.body-left-center, .body-left-top {
+  animation: fadeIn1 0.6s linear forwards;
+  /* transition: opacity 0.5s ease, transform 0.5s ease; */
+}
+@keyframes fadeIn1{
+  0% {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+ .body-left-bottom {
+  animation: slideRight 0.6s linear forwards;
+}
+@keyframes slideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+.body-right{
+  animation: fadeIn2 0.65s linear forwards;
+}
+@keyframes fadeIn2 {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
