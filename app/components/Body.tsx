@@ -111,8 +111,8 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                         {weatherData?.current?.time?.split(" ")[0]}, {weatherData?.current?.time.split(" ").slice(1, 3).join(" ")}, {weatherData?.current?.time?.split(" ")[3]}
                         <Image
                           src={weatherData?.current?.is_day === 1
-                            ?"/icon-morning.png"
-                            :"/icon-night.png"
+                            ?"/assets/icon-morning.png"
+                            :"/assets/icon-night.png"
                           }
                           alt="Sun or Moon Icon"
                           width={15}
