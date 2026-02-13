@@ -76,8 +76,8 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
   }, [weatherData]);
 
   useEffect(() => {
-    setIsLoading(isSearching);
-  }, [isSearching]);
+    setIsLoading(!isloading);
+  }, []);
 
   useEffect(() => {
     toggleSelectDropdown();
@@ -91,9 +91,11 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
         <div
           className="body-left-top opacity-0 flex max-md:flex-col md:flex-row justify-between items-center w-full h-[45%] bg-cover bg-no-repeat bg-center rounded-lg p-5"
           style={
-            isMobile
-              ? { backgroundImage: "url('/bg-today-small.svg')" }
-              : { backgroundImage: "url('/bg-today-large.svg')" }
+            isloading
+              ?  { backgroundColor: "hsl(243, 23%, 24%)" }
+              : isMobile
+                  ? { backgroundImage: "url('/bg-today-small.svg')" }
+                  : { backgroundImage: "url('/bg-today-large.svg')" }
           }
         >
           {isloading ? (
@@ -127,7 +129,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                           alt="Sun or Moon Icon"
                           width={15}
                           height={15}
-                          className="mx-2"
+                          className="mx-1"
                         />
                       </div>
                     </>                   
@@ -169,7 +171,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : !weatherData?.current?.apparent_temperature 
                     ? "__" 
-                    : weatherData?.current?.apparent_temperature?.toFixed(1)}{weatherData?.current?.temperature_2m !== null && "°"}
+                    : weatherData?.current?.apparent_temperature?.toFixed(1)}{weatherData?.current?.temperature_2m !== null && !isloading && "°"}
               </div>
             </div>
 
@@ -182,7 +184,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.relative_humidity_2m === null || weatherData?.current?.relative_humidity_2m < 0
                     ? "__" 
-                    : weatherData?.current?.relative_humidity_2m?.toFixed(1)}{weatherData?.current?.relative_humidity_2m !== null && "%"}
+                    : weatherData?.current?.relative_humidity_2m?.toFixed(1)}{weatherData?.current?.relative_humidity_2m !== null && !isloading && "%"}
               </div>
             </div>
 
@@ -195,7 +197,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.wind_speed_10m === null || weatherData?.current?.wind_speed_10m < 0
                     ? "__" 
-                    : weatherData?.current?.wind_speed_10m?.toFixed(1)}{weatherData.current?.wind_speed_10m !== null ? !isKmh ? " mph" : " km/h" : ""}
+                    : weatherData?.current?.wind_speed_10m?.toFixed(1)}{weatherData.current?.wind_speed_10m !== null && !isloading ? !isKmh ? " mph" : " km/h" : ""}
               </div>
             </div>
 
@@ -208,7 +210,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                   ? "__" 
                   : weatherData?.current?.precipitation === null || weatherData?.current?.precipitation < 0
                     ? "__" 
-                    : weatherData?.current?.precipitation?.toFixed(1)}{weatherData?.current?.precipitation !== null  ? !isMm ? " inch" : " mm" : ""}
+                    : weatherData?.current?.precipitation?.toFixed(1)}{weatherData?.current?.precipitation !== null && !isloading ? !isMm ? " inch" : " mm" : ""}
               </div>
             </div>
           </div>
@@ -278,7 +280,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
               onClick={() => setOpen(!open)}
               className="w-full h-fit flex flex-row justify-between items-center text-start text-[12px] text-neutral-200 font-medium bg-neutral-600 border border-neutral-700 focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1 cursor-pointer transition duration-300 ease"
             >
-              <div>{selectday}</div>
+              <div>{isloading ? "__" : selectday}</div>
               <Image
                 src="/icon-dropdown.svg"
                 alt="Units icon"
