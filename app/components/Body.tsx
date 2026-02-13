@@ -82,8 +82,8 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
             isloading
               ?  { backgroundColor: "hsl(243, 23%, 24%)" }
               : isMobile
-                  ? { backgroundImage: "url('/bg-today-small.svg')" }
-                  : { backgroundImage: "url('/bg-today-large.svg')" }
+                  ? { backgroundImage: "url('/assets/bg-today-small.svg')" }
+                  : { backgroundImage: "url('/assets/bg-today-large.svg')" }
           }
         >
           {isloading ? (
