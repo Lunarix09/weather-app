@@ -12,11 +12,13 @@ interface SelectProps {
 const Select:React.FC<SelectProps> = ({values, value, setValue, dropdownClassName, triggerClassName, ulClassName, liClassName}) => {
      const [open, setOpen] = React.useState<boolean>(false);
      const [isloading, setIsLoading] = React.useState<boolean>(true);
+     const iconDropRef = React.useRef<HTMLImageElement>(null);
      const toggleSelectDropdown = ():void => {
           document.addEventListener("click", (e) => {
                const isDropdownTrigger = (e.target as HTMLElement).closest(".select-dropdown");
                if (!isDropdownTrigger) {
                     setOpen(false);
+                    iconDropRef.current?.classList.remove("rotate-180");
                }
           });
      };
@@ -25,15 +27,20 @@ const Select:React.FC<SelectProps> = ({values, value, setValue, dropdownClassNam
           <div className={`select-dropdown relative ${dropdownClassName}`}>
           {/* Trigger */}
                <button
-                   onClick={() => setOpen(!open)}
+                   onClick={(e) => {
+                         setOpen(!open);
+                         iconDropRef.current?.classList.toggle("rotate-180");
+                    }}
                    className={`${triggerClassName}`}
                >
                    <div>{isloading? "_" : value}</div>
                    <Image
                      src="/assets/icon-dropdown.svg"
                      alt="Units icon"
+                     ref={iconDropRef}
                      width={12}
                      height={12}
+                     className='transition-all duration-500'
                    />
                </button>
      

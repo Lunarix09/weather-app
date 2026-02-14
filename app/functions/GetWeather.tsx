@@ -1,4 +1,5 @@
 import { fetchWeatherApi } from "openmeteo";
+import SearchPlaces from "./SearchPlaces";
 
 interface WeatherData {
     cityNameCountry: string,
@@ -11,6 +12,7 @@ interface WeatherData {
       wind_speed_10m: number | null,
       precipitation: number | null,
       relative_humidity_2m: number | null,
+      wind_gusts_10m: number | null
     },
     hourly: {
       time: string[],
@@ -26,15 +28,22 @@ interface WeatherData {
 }
 
 async function GetWeather(
-     city:string, 
+     lang:string,
+     isKmh:boolean, 
      isCelsius:boolean, 
-     isKmh:boolean, isMm:boolean,
-     setIsSearching: React.Dispatch<React.SetStateAction<boolean>>,
-     lang:string, 
+     isMm:boolean,
+     setIsSearching: React.Dispatch<React.SetStateAction<boolean>>, 
+     cityName: string,
      setErrorOccurs: React.Dispatch<React.SetStateAction<boolean>>,
-     setNoCityFound: React.Dispatch<React.SetStateAction<boolean>>
-     ): Promise<WeatherData> {
-
+     cityCountry?:string,
+     citylatitude?: number,
+     citylongitude?: number,
+     citytimeZone?: string, 
+     setNoCityFound?: React.Dispatch<React.SetStateAction<boolean>>
+     ): Promise<[WeatherData, any[]]> {
+     setErrorOccurs(false);
+     setNoCityFound && setNoCityFound(false);
+     
      let cityInfo: any = {};
      // const faApiUrl = process.env.NEXT_PUBLIC_FAAPI_URL!;
      // const faApiKey = process.env.NEXT_PUBLIC_FAAPI_KEY!;
@@ -63,49 +72,28 @@ async function GetWeather(
 
 
      let weatherData: WeatherData= {} as WeatherData;
+     let gwList: any = [];
 
-     if (city) {
-          try {
-               const params = new URLSearchParams({
-                    name: city,
-                    count: '1',
-                    language: lang,
-                    format: 'json'
-               });
-               const url = `${process.env.NEXT_PUBLIC_OMAPI_SEARCH_URL}?${params.toString()}`;
-               
-               const response = await fetch(url, {method: 'GET'});
-
-               if (!response.ok) {
-                    setErrorOccurs(true);
-                    setIsSearching(false);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-               }
-
-               const data = await response.json();        
-               if (data.results && data.results.length > 0) {
-                    cityInfo = data.results[0];
-                    setNoCityFound(false);
-               } else {
-                    setNoCityFound(true);
-                    setIsSearching(false);
-               }               
-          } catch (error) {
-               console.error("Error fetching city info:", error);
+     // If no explicit coordinates were passed, try to look up the city
+     if (!cityCountry && (citylatitude == null || citylongitude == null)) {
+          const city = await SearchPlaces(cityName, 1, lang);
+          // If SearchPlaces returns no result, stop and mark "noCityFound"
+          if (!city || Array.isArray(city) && city === null as unknown as [{}] ) {
                setIsSearching(false);
-               setErrorOccurs(true);
-          } 
+               setNoCityFound && setNoCityFound(true);
+               return [{} as WeatherData, []];
+          }
+          cityInfo = city[0];
      }
 
-     
      const fectchWeather = async ()=>{
           const params: Record<string, any> = {
-               latitude: cityInfo?.latitude || 0,
-               longitude: cityInfo?.longitude || 0,
+               latitude: citylatitude ?? cityInfo?.latitude,
+               longitude: citylongitude ?? cityInfo?.longitude,
                daily: ["temperature_2m_max", "temperature_2m_min", "weather_code"],
                hourly: ["temperature_2m", "weather_code"],
-               current: ["temperature_2m", "apparent_temperature", "wind_speed_10m", "is_day", "weather_code", "precipitation", "relative_humidity_2m"],
-               timezone: cityInfo?.timezone || "Australia/Sydney",
+               current: ["temperature_2m", "apparent_temperature", "wind_speed_10m", "is_day", "weather_code", "precipitation", "relative_humidity_2m", "wind_gusts_10m"],
+               timezone: citytimeZone ?? cityInfo?.timezone,
                
           };
           if (!isKmh) params.wind_speed_unit="mph";
@@ -130,9 +118,9 @@ async function GetWeather(
           const hourly = response?.hourly()!;
           const daily = response?.daily()!;
 
-          // Note: The order of weather variables in the URL query and the indices below need to match!
+          // Note: The order of weather variables in the URL query and the indices below need to match!  
           weatherData = {
-               cityNameCountry: `${cityInfo?.name}_${cityInfo?.country}` || "",
+               cityNameCountry: cityCountry ? `${cityName}_${cityCountry}` : cityInfo.country ? `${cityName}_${cityInfo.country}`: `${cityName}_none`,
                current: {
                     time: String(new Date((Number(current.time()) + utcOffsetSeconds) * 1000)),
                     apparent_temperature: current.variables(0)!.value(),
@@ -142,6 +130,7 @@ async function GetWeather(
                     wind_speed_10m: current.variables(4)!.value(),
                     precipitation: current.variables(5)!.value(),
                     relative_humidity_2m: current.variables(6)!.value(),
+                    wind_gusts_10m: current.variables(7)!.value(),
                },
                hourly: {
                     time: Array.from(
@@ -172,13 +161,21 @@ async function GetWeather(
                     ) ,
                },
           }; 
-     }
 
-     if (city && cityInfo) {
-          await fectchWeather();          
+          gwList = [weatherData.cityNameCountry, latitude, longitude, timezone || ""]
+     }; 
+
+     // Call fetch only when we have coordinates (either passed in or from SearchPlaces)
+     const hasCoordsFromArgs = citylatitude && citylongitude && citytimeZone;
+     const hasCoordsFromFoundCity = cityInfo && cityInfo.latitude && cityInfo.longitude && cityInfo.timezone;
+     if (hasCoordsFromArgs || hasCoordsFromFoundCity) {
+          await fectchWeather();
+     } else {
+          setIsSearching(false);
+          return [{} as WeatherData, []];
      }
      setIsSearching(false);
-     return weatherData;
+     return [weatherData, gwList];
 }
 
 export default GetWeather

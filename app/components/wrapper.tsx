@@ -22,6 +22,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
     const windRef_2 = useRef<HTMLDivElement>(null);
     const precipitationRef_1 = useRef<HTMLDivElement>(null);
     const precipitationRef_2 = useRef<HTMLDivElement>(null);
+    const iconDropRef2 = React.useRef<HTMLImageElement>(null);
 
     const toggleDropdown = ():void => {
         document.addEventListener("click", (e) => {
@@ -30,6 +31,7 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
             if (!isDropdownTrigger && !isDropdownContent) {
                 document.querySelectorAll(".dropdown").forEach((dropdown) => {
                     dropdown.classList.remove("is-open");
+                    (dropdown.querySelector(".dropdown-trigger")?.lastChild as HTMLImageElement)?.classList.remove("rotate-180");
                 });
             }
         });
@@ -37,6 +39,8 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
             trigger.addEventListener("click", (e) => {
                 e.preventDefault();
                 trigger?.closest(".dropdown")?.classList.toggle("is-open");
+                (trigger?.lastChild as HTMLImageElement)?.classList.toggle("rotate-180");
+                (trigger?.firstChild as HTMLImageElement)?.classList.toggle("rotate-180");
             });
         });
     };
@@ -120,20 +124,21 @@ function wrapper ({isImperial, setIsImperial, isCelsius, setIsCelsius, isKmh, se
 
       <div className="dropdown dropdown-bottom">
         <button className="dropdown-trigger flex flex-row w-24 h-6.5 gap-2 items-center justify-between text-center text-[12px] text-neutral-0 font-light bg-neutral-800 border border-transparent focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1">
-            <div>
-                <Image
+            <Image
                 src="/assets/icon-units.svg"
                 alt="Units icon"
                 width={12}
                 height={12}
-                />
-            </div>
+                className='transition-all duration-500'
+            />
             <div>Units</div>
             <Image
                 src="/assets/icon-dropdown.svg"
                 alt="Units icon"
+                ref={iconDropRef2}
                 width={12}
                 height={12}
+                className='transition-all duration-500'
             />
         </button>
 

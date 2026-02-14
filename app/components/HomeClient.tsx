@@ -17,6 +17,7 @@ interface WeatherData {
       wind_speed_10m: number | null,
       precipitation: number | null,
       relative_humidity_2m: number | null,
+      wind_gusts_10m: number | null
     },
     hourly: {
       time: string[],
@@ -35,7 +36,7 @@ const HomeClient = () => {
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const [searchText, setSearchText] = React.useState<string>(timeZone.split("/")[1]);
+  const [searchText, setSearchText] = React.useState<{name:string, latitude:number, longitude:number, timezone:string}>({name:timeZone.split("/")[1], latitude:0, longitude:0, timezone:timeZone});
   const [lang, setLang] = React.useState<string>("en");
   const [isSearching, setIsSearching] = React.useState<boolean>(false);
   const [isCelsius, setIsCelsius] = React.useState<boolean>(true);
@@ -90,14 +91,21 @@ const HomeClient = () => {
   }, [])
 
   React.useEffect(()=>{
-
-    GetWeather(searchText, isCelsius, isKmh, isMm, setIsSearching, lang, setErrorOccurs, setNoCityFound).then((data) => {
-      setIsSearching(false);
-      setWeatherData(data);
-    });
-    // then signifie une fois que la promesse est résolue, on peut accéder à la valeur de retour de la fonction asynchrone
     
-  }, [isSearching ,searchText, isCelsius, isKmh, isMm])
+    setErrorOccurs(false);
+    // setNoCityFound(false);
+    GetWeather(lang, isKmh, isCelsius, isMm, setIsSearching, searchText.name, setErrorOccurs, undefined, searchText.latitude !== 0 ? searchText.latitude : undefined, searchText.longitude !== 0 ? searchText.longitude : undefined, searchText.timezone, setNoCityFound)
+    .then(([weather, locationData]) => {
+      setIsSearching(false);
+      setWeatherData(weather);
+      
+      // Only update searchText if coordinates differ (new search, not unit change)
+      if (locationData && (locationData[1] !== searchText.latitude || locationData[2] !== searchText.longitude)) {
+        setSearchText({name:locationData[0], latitude:locationData[1], longitude:locationData[2], timezone:locationData[3]})
+      }
+    });
+    // then signifie une fois que la promesse est résolue, on peut accéder à la valeur de retour de la fonction asynchrone    
+  }, [isCelsius, isKmh, isMm, searchText])
 
   return (
     <div className="flex flex-col w-screen h-screen max-md:px-3 md:px-15 pt-11 pb-4 justify-start items-center overflow-auto scroll-auto ">
@@ -130,7 +138,7 @@ const HomeClient = () => {
                 className='flex flex-row w-fit h-fit items-center gap-2 mt-6 p-4 bg-neutral-800 rounded-lg text-[14px] text-neutral-0 font-medium font-dm_sans hover:bg-neutral-700'
                 onClick={(e)=>{
                   setErrorOccurs(false);
-                  setSearchText("");
+                  // setSearchText("");
                   setIsSearching(false);
                   setIsImperial(false);
                   window.location.reload();
@@ -148,15 +156,24 @@ const HomeClient = () => {
 
           : <div>
               <Header
+                searchText={searchText}
                 setSearchText={setSearchText}
                 setIsSearching={setIsSearching}
                 isSearching={isSearching}
+                isKmh={isKmh}
+                isCelsius={isCelsius}
+                isMm={isMm}
+                lang={lang}
+                setWeatherData={setWeatherData}
+                setErrorOccurs={setErrorOccurs}
+                setNoCityFound={setNoCityFound}
               />
               { noCityFound
                   ? <div className="text-center text-neutral-0 font-dm_sans font-semibold text-[18px] mt-10">No search result found!</div>
                   :
                     <Body
                       isSearching={isSearching}
+                      noCityFound={noCityFound}
                       isCelsius={isCelsius}
                       isKmh={isKmh}
                       isMm={isMm}

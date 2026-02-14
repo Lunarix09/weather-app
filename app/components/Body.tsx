@@ -9,6 +9,7 @@ type BodyProps = {
   isKmh: boolean;
   isMm: boolean;
   isSearching: boolean;
+  noCityFound: boolean;
 
   weatherData: {
     cityNameCountry: string;
@@ -21,6 +22,7 @@ type BodyProps = {
       wind_speed_10m: number | null;
       precipitation: number | null;
       relative_humidity_2m: number | null;
+      wind_gusts_10m: number | null
     };
     hourly: {
       time: string[];
@@ -36,7 +38,7 @@ type BodyProps = {
   };
 };
 
-function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
+function Body({isCelsius, isKmh, isMm, isSearching, noCityFound, weatherData }: BodyProps) {
   const [selectday, setSelectday] = useState<string>("Monday");
   const [isloading, setIsLoading] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -51,7 +53,7 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
   ];
 
   useEffect(() => {
-    if (weatherData?.hourly?.time?.length > 0) {
+    if (Object.keys(weatherData).length > 0) {
 
       setSelectday( (prevday:string):string =>{
         const day:string = (prevday.slice(0,3) === weatherData?.hourly?.time[0].split(" ")[0])
@@ -74,7 +76,8 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
 
   return (
     <div className="md:grid md:grid-cols-3 max-md:grid-cols-1 gap-4 w-[85vw] min-[1000px]:w-[70vw] md:flex-1 max-md:mt-0.5">
-      <div className="body-left col-start-1 md:col-span-2 flex flex-col items-start justify-start rounded-lg ">
+      
+        <div className="body-left col-start-1 md:col-span-2 flex flex-col items-start justify-start rounded-lg ">
         
         <div
           className="body-left-top opacity-0 flex max-md:flex-col md:flex-row justify-between items-center w-full h-[45%] bg-cover bg-no-repeat bg-center rounded-lg p-5"
@@ -103,8 +106,10 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
                 {weatherData?.current && weatherData?.cityNameCountry &&(
                     <>
                       <div className="text-[18px] text-neutral-0 font-semibold ">
-                        {weatherData?.cityNameCountry.split("_")[0]}{", "}
-                          {weatherData?.cityNameCountry.split("_")[1]}
+                        {weatherData?.cityNameCountry.split("_")[0]}
+                          {weatherData?.cityNameCountry.split("_")[1] !== "none" 
+                            ? `, ${weatherData?.cityNameCountry.split("_")[1]}`
+                            : ""}
                       </div>
 
                       <div className="flex flex-row items-center text-[12px] text-neutral-200 font-medium ">
@@ -183,9 +188,9 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
               <div className="text-[18px] text-neutral-200 font-normal">
                 {isloading 
                   ? "__" 
-                  : weatherData?.current?.wind_speed_10m === null || weatherData?.current?.wind_speed_10m < 0
+                  : weatherData?.current?.wind_gusts_10m === null || weatherData?.current?.wind_gusts_10m < 0
                     ? "__" 
-                    : weatherData?.current?.wind_speed_10m?.toFixed(0)}{weatherData.current?.wind_speed_10m !== null && !isloading ? !isKmh ? " mph" : " km/h" : ""}
+                    : weatherData?.current?.wind_gusts_10m?.toFixed(0)}{weatherData.current?.wind_gusts_10m !== null && !isloading ? !isKmh ? " mph" : " km/h" : ""}
               </div>
             </div>
 
@@ -254,83 +259,84 @@ function Body({isCelsius, isKmh, isMm, isSearching, weatherData }: BodyProps) {
             ))}
           </div>
         </div>
-      </div>
+        </div>
 
-      <div className="body-right opacity-0 md:col-end-4 max-md:mt-8 w-full h-[64vh] flex flex-col justify-start items-start p-2.5 rounded-lg bg-neutral-800 ">
-        <div className="flex flex-row justify-between items-center w-full ">
-          <div className="text-[14px] text-neutral-200 font-medium">
-            Hourly forecast
+        <div className="body-right opacity-0 md:col-end-4 max-md:mt-8 w-full h-[64vh] flex flex-col justify-start items-start p-2.5 rounded-lg bg-neutral-800 ">
+          <div className="flex flex-row justify-between items-center w-full ">
+            <div className="text-[14px] text-neutral-200 font-medium">
+              Hourly forecast
+            </div>
+
+            <Select 
+              values={days}
+              value={selectday}
+              setValue={setSelectday}
+              dropdownClassName={"w-25"}
+              triggerClassName={" w-full h-fit flex flex-row justify-between items-center text-start text-[12px] text-neutral-200 font-medium bg-neutral-600 border border-neutral-700 focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1 cursor-pointer transition duration-300 ease"}
+              ulClassName={" w-full bg-neutral-600  shadow-lg"}
+              liClassName={" border px-3 py-1.5 text-[12px] text-neutral-200 border-neutral-700 hover:border-neutral-200 transition duration-300 esae"}
+            />
           </div>
 
-          <Select 
-            values={days}
-            value={selectday}
-            setValue={setSelectday}
-            dropdownClassName={"w-25"}
-            triggerClassName={" w-full h-fit flex flex-row justify-between items-center text-start text-[12px] text-neutral-200 font-medium bg-neutral-600 border border-neutral-700 focus:border-neutral-200 hover:border-neutral-200 rounded-lg px-3 py-1 cursor-pointer transition duration-300 ease"}
-            ulClassName={" w-full bg-neutral-600  shadow-lg"}
-            liClassName={" border px-3 py-1.5 text-[12px] text-neutral-200 border-neutral-700 hover:border-neutral-200 transition duration-300 esae"}
-          />
-        </div>
-
-        <div className="flex flex-col w-full scroll mt-3">
-         {
-            weatherData?.hourly?.time?.map((td:string, i)=> (
-              td.split(" ")[0] === selectday.slice(0,3) &&(
-                <div key={`${td}__${i}`} className="flex flex-row w-full mb-1.5 bg-neutral-700 rounded-lg border border-neutral-600 justify-between items-center text-center align-middle py-px px-3 font-bricolage_grotesque ">
-                  <div className="flex flex-row items-center align-middle gap-1">
-                    <Image
-                      src={CheckWeatherCode(
-                        weatherData?.hourly?.weather_code[
-                          weatherData.hourly.time.indexOf(td)
-                        ] ?? 0,
-                      )}
-                      alt="Hour weather Icon"
-                      width={45}
-                      height={45}
-                    />
-                    <div className="text-[14px] font-medium ">
-                      {Number(td.split(" ")[4].split(":")[0]) <= 12 && Number(td.split(" ")[4].split(":")[0]) > 0 
-                        ? Number(td.split(" ")[4].split(":")[0])
-                        : Number(td.split(" ")[4].split(":")[0]) === 0
-                          ? Number(td.split(" ")[4].split(":")[0]) + 12
-                          : Number(td.split(" ")[4].split(":")[0]) - 12
-                      }
-                      {(weatherData?.current?.is_day === 1 ) 
-                          ? (Number(td.split(" ")[4].split(":")[0]) < 12) 
-                            ? " AM" 
-                            : " PM"
-                          : (Number(td.split(" ")[4].split(":")[0]) <= 23 && Number(td.split(" ")[4].split(":")[0]) >= 12)
-                            ?" PM"
-                            :" AM"
+          <div className="flex flex-col w-full scroll mt-3">
+          {
+              weatherData?.hourly?.time?.map((td:string, i)=> (
+                td.split(" ")[0] === selectday.slice(0,3) &&(
+                  <div key={`${td}__${i}`} className="flex flex-row w-full mb-1.5 bg-neutral-700 rounded-lg border border-neutral-600 justify-between items-center text-center align-middle py-px px-3 font-bricolage_grotesque ">
+                    <div className="flex flex-row items-center align-middle gap-1">
+                      <Image
+                        src={CheckWeatherCode(
+                          weatherData?.hourly?.weather_code[
+                            weatherData.hourly.time.indexOf(td)
+                          ] ?? 0,
+                        )}
+                        alt="Hour weather Icon"
+                        width={45}
+                        height={45}
+                      />
+                      <div className="text-[14px] font-medium ">
+                        {Number(td.split(" ")[4].split(":")[0]) <= 12 && Number(td.split(" ")[4].split(":")[0]) > 0 
+                          ? Number(td.split(" ")[4].split(":")[0])
+                          : Number(td.split(" ")[4].split(":")[0]) === 0
+                            ? Number(td.split(" ")[4].split(":")[0]) + 12
+                            : Number(td.split(" ")[4].split(":")[0]) - 12
                         }
+                        {(weatherData?.current?.is_day === 1 ) 
+                            ? (Number(td.split(" ")[4].split(":")[0]) < 12) 
+                              ? " AM" 
+                              : " PM"
+                            : (Number(td.split(" ")[4].split(":")[0]) <= 23 && Number(td.split(" ")[4].split(":")[0]) >= 12)
+                              ?" PM"
+                              :" AM"
+                          }
+                      </div>
+                    </div>
+
+                    <div className="text-[12px] text-neutral-200 ">
+                            {weatherData?.hourly?.temperature_2m[
+                              weatherData.hourly.time.indexOf(td)
+                            ]?.toFixed(0) ?? 0}°
                     </div>
                   </div>
+                )
+              ))
+            }
 
-                  <div className="text-[12px] text-neutral-200 ">
-                          {weatherData?.hourly?.temperature_2m[
-                            weatherData.hourly.time.indexOf(td)
-                          ]?.toFixed(0) ?? 0}°
-                  </div>
-                </div>
-              )
-            ))
-          }
-
-          {!weatherData?.daily?.time?.length && (
-            <>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-              <div className="h-8 w-full bg-neutral-700 mb-2"></div>
-            </>
-          )}
+            {!weatherData?.daily?.time?.length && (
+              <>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+                <div className="h-8 w-full bg-neutral-700 mb-2"></div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      
     </div>
   );
 }
