@@ -32,6 +32,7 @@ interface CitiesSuggestedProps {
      lang:string,
      searchText: string,
      setSearchText: React.Dispatch<React.SetStateAction<{name:string, latitude:number, longitude:number, timezone:string}>>,
+     setPlaceholder: React.Dispatch<React.SetStateAction<string>>,
      isKmh:boolean, 
      isCelsius:boolean, 
      isMm:boolean,
@@ -92,8 +93,8 @@ function CitiesSuggested(props: CitiesSuggestedProps) {
                                         onClick={(e)=>{
                                              e.preventDefault();
                                              props.setIsSearching(true);
-                                             // props.setSearchText(`${cityData?.name}`);
-                                             GetWeather(props.lang, props.isKmh, props.isCelsius, props.isMm, props?.setIsSearching, cityData?.name, props.setErrorOccurs, cityData?.country, cityData?.latitude, cityData?.longitude, cityData?.timezone, props.setNoCityFound)
+                                             props.setPlaceholder(`${cityData?.name}, ${cityData?.country}`);
+                                             GetWeather(props.lang, props.isKmh, props.isCelsius, props.isMm, props?.setIsSearching, cityData?.name, props.setErrorOccurs, cityData?.country || cityData?.timezone.split("/")[0], cityData?.latitude, cityData?.longitude, cityData?.timezone, props.setNoCityFound)
                                              .then(([weather, locationData])=>{
                                                   props.setWeatherData(weather);
                                                   setOpen(false);
@@ -102,7 +103,7 @@ function CitiesSuggested(props: CitiesSuggestedProps) {
                                              });                                       
                                         }}
                                    >
-                                        {cityData?.name}, {cityData?.admin1 || cityData?.admin3}, {cityData?.timezone.split("/")[1]}
+                                        {cityData?.name}, {cityData?.admin1 || cityData?.admin3}, {cityData?.country || cityData?.timezone.split("/")[0]}
                                    </div>
                                    )                         
                               )}   

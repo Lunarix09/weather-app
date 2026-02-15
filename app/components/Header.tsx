@@ -48,6 +48,7 @@ const Header: React.FC<SearchProps> = ({searchText, setSearchText, setIsSearchin
   
   const [localsearchText, setLocalSearchText] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const [placeholder, setPlaceholder] = React.useState<string>("");
 
   const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
@@ -55,29 +56,33 @@ const Header: React.FC<SearchProps> = ({searchText, setSearchText, setIsSearchin
     // afficher l'indicateur de recherche
     if (localsearchText.trim() !== "") {
       setIsSearching(true);
+      setPlaceholder(localsearchText)
       setLocalSearchText("");
-      // setNoCityFound(false);
 
-      await GetWeather(lang, isKmh, isCelsius, isMm, setIsSearching, localsearchText, setErrorOccurs).then(([weather, locationData])=>{
+      if (inputRef.current) {
+        inputRef.current.blur();
+        inputRef.current.placeholder = `Searching for ${placeholder}...`; 
+      }
+
+      await GetWeather(lang, isKmh, isCelsius, isMm, setIsSearching, localsearchText, setErrorOccurs, undefined, undefined, undefined, undefined, setNoCityFound).then(([weather, locationData])=>{
         setWeatherData(weather);
         setIsSearching(false);
-        setSearchText({name:locationData[0], latitude:locationData[1], longitude:locationData[2], timezone:locationData[3]})
+        setSearchText({name:locationData[0], latitude:locationData[1], longitude:locationData[2], timezone:locationData[3]});
+
+        if (inputRef.current) {
+          inputRef.current.placeholder = "Search for a city, e.g., New York";
+        };
       });
     };
   };
 
   React.useEffect(()=>{
-    if (!isSearching){
-      if (inputRef.current) {
-        inputRef.current.placeholder = "Search for a city, e.g., New York";
-      };
-    }else if (inputRef.current) {
-        setLocalSearchText("");
-        inputRef.current.blur();
-        inputRef.current.placeholder = "Searching for " + searchText.name + "..."; 
-      }
-  }, [isSearching]);
-  
+    if (isSearching && inputRef.current) {
+      setLocalSearchText("");
+      inputRef.current.blur();
+      inputRef.current.placeholder = `Searching for ${placeholder}...`; 
+    } else if (inputRef.current) inputRef.current.placeholder = "Search for a city, e.g., New York";
+  }, [isSearching])
 
   return (
     <div className="flex max-md:w-[85vw] w-full max-md:mt-4 max-md:mb-5 md:mt-1 mb-6 justify-center items-center">
@@ -122,6 +127,7 @@ const Header: React.FC<SearchProps> = ({searchText, setSearchText, setIsSearchin
                 lang={lang}
                 searchText={localsearchText}
                 setSearchText={setSearchText}
+                setPlaceholder={setPlaceholder}
                 isKmh={isKmh}
                 isCelsius={isCelsius}
                 isMm={isMm}

@@ -94,7 +94,7 @@ const HomeClient = () => {
     
     setErrorOccurs(false);
     // setNoCityFound(false);
-    GetWeather(lang, isKmh, isCelsius, isMm, setIsSearching, searchText.name, setErrorOccurs, undefined, searchText.latitude !== 0 ? searchText.latitude : undefined, searchText.longitude !== 0 ? searchText.longitude : undefined, searchText.timezone, setNoCityFound)
+    GetWeather(lang, isKmh, isCelsius, isMm, setIsSearching, searchText.name, setErrorOccurs, undefined, searchText.latitude !== 0 ? searchText.latitude : undefined, searchText.longitude !== 0 ? searchText.longitude : undefined, searchText.timezone)
     .then(([weather, locationData]) => {
       setIsSearching(false);
       setWeatherData(weather);
